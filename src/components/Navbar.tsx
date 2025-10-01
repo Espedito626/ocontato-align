@@ -18,18 +18,18 @@ const Navbar = () => {
           
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            <a href="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
+            <button onClick={() => document.getElementById('como-funciona')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-medium hover:text-primary transition-colors">
               Como Funciona
-            </a>
-            <a href="/planos" className="text-sm font-medium hover:text-primary transition-colors">
+            </button>
+            <button onClick={() => document.getElementById('planos')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-medium hover:text-primary transition-colors">
               Planos
-            </a>
-            <a href="/para-prestadores" className="text-sm font-medium hover:text-primary transition-colors">
+            </button>
+            <button onClick={() => document.getElementById('prestadores')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-medium hover:text-primary transition-colors">
               Para Prestadores
-            </a>
-            <a href="/blog" className="text-sm font-medium hover:text-primary transition-colors">
+            </button>
+            <button className="text-sm font-medium hover:text-primary transition-colors">
               Blog
-            </a>
+            </button>
           </div>
           
           {/* Actions */}
