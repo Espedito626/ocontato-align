@@ -1,8 +1,10 @@
 import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const Hero = () => {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center px-4 gradient-dark">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
@@ -40,7 +42,11 @@ const Hero = () => {
                   className="pl-10 h-14 border-0 bg-secondary/50 text-lg focus-visible:ring-primary"
                 />
               </div>
-              <Button size="lg" className="h-14 px-8 gradient-primary hover:shadow-glow transition-smooth">
+              <Button 
+                size="lg" 
+                className="h-14 px-8 gradient-primary hover:shadow-glow transition-smooth"
+                onClick={() => navigate('/search')}
+              >
                 Buscar Agora
               </Button>
             </div>

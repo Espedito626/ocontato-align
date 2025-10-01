@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 
@@ -27,18 +28,18 @@ const Navbar = () => {
             <button onClick={() => document.getElementById('prestadores')?.scrollIntoView({ behavior: 'smooth' })} className="text-sm font-medium hover:text-primary transition-colors">
               Para Prestadores
             </button>
-            <button className="text-sm font-medium hover:text-primary transition-colors">
-              Blog
-            </button>
+            <Link to="/search" className="text-sm font-medium hover:text-primary transition-colors">
+              Buscar
+            </Link>
           </div>
           
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <Button variant="ghost" className="hidden md:inline-flex">
-              Entrar
+            <Button variant="ghost" className="hidden md:inline-flex" asChild>
+              <Link to="/login">Entrar</Link>
             </Button>
-            <Button className="gradient-primary hover:shadow-glow transition-smooth">
-              Cadastrar
+            <Button className="gradient-primary hover:shadow-glow transition-smooth" asChild>
+              <Link to="/signup">Cadastrar</Link>
             </Button>
             <Button variant="ghost" size="icon" className="md:hidden">
               <Menu className="h-5 w-5" />
