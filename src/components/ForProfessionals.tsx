@@ -1,32 +1,24 @@
 import { TrendingUp, Users, Clock, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const benefits = [
-  {
-    icon: TrendingUp,
-    title: "Mais clientes",
-    description: "Seja encontrado por quem realmente precisa dos seus serviços"
-  },
-  {
-    icon: Users,
-    title: "Sem intermediários",
-    description: "Contato direto no WhatsApp, sem comissões por trabalho"
-  },
-  {
-    icon: Clock,
-    title: "Gestão simples",
-    description: "Controle tudo em um painel intuitivo e fácil de usar"
-  },
-  {
-    icon: Shield,
-    title: "Credibilidade",
-    description: "Construa reputação com avaliações reais dos clientes"
-  }
-];
-
+const benefits = [{
+  icon: TrendingUp,
+  title: "Mais clientes",
+  description: "Seja encontrado por quem realmente precisa dos seus serviços"
+}, {
+  icon: Users,
+  title: "Sem intermediários",
+  description: "Contato direto no WhatsApp, sem comissões por trabalho"
+}, {
+  icon: Clock,
+  title: "Gestão simples",
+  description: "Controle tudo em um painel intuitivo e fácil de usar"
+}, {
+  icon: Shield,
+  title: "Credibilidade",
+  description: "Construa reputação com avaliações reais dos clientes"
+}];
 const ForProfessionals = () => {
-  return (
-    <section id="prestadores" className="py-24 px-4 gradient-dark">
+  return <section id="prestadores" className="py-24 px-4 gradient-dark">
       <div className="container mx-auto max-w-6xl">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
@@ -40,9 +32,7 @@ const ForProfessionals = () => {
             <h2 className="text-4xl md:text-5xl font-bold leading-tight">
               Faça seu negócio
               <br />
-              <span className="gradient-primary bg-clip-text text-transparent">
-                crescer com o OContato
-              </span>
+              
             </h2>
             
             <p className="text-xl text-muted-foreground">
@@ -60,11 +50,9 @@ const ForProfessionals = () => {
             
             <div className="flex items-center gap-6 pt-4">
               <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-10 w-10 rounded-full bg-primary/20 border-2 border-background flex items-center justify-center text-xs font-medium">
+                {[1, 2, 3, 4].map(i => <div key={i} className="h-10 w-10 rounded-full bg-primary/20 border-2 border-background flex items-center justify-center text-xs font-medium">
                     {i}k+
-                  </div>
-                ))}
+                  </div>)}
               </div>
               <div>
                 <div className="font-medium">4.8★ de avaliação</div>
@@ -75,23 +63,16 @@ const ForProfessionals = () => {
           
           {/* Right Benefits */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {benefits.map((benefit, index) => (
-              <div 
-                key={index}
-                className="bg-card rounded-xl p-6 shadow-card border border-border/50 hover:border-primary/50 transition-smooth group"
-              >
+            {benefits.map((benefit, index) => <div key={index} className="bg-card rounded-xl p-6 shadow-card border border-border/50 hover:border-primary/50 transition-smooth group">
                 <div className="h-12 w-12 rounded-lg gradient-primary flex items-center justify-center mb-4 shadow-glow group-hover:scale-110 transition-smooth">
                   <benefit.icon className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="text-lg font-bold mb-2">{benefit.title}</h3>
                 <p className="text-sm text-muted-foreground">{benefit.description}</p>
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default ForProfessionals;
