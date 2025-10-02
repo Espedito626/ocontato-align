@@ -1,137 +1,160 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft } from "lucide-react";
 
 const Signup = () => {
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState<"client" | "professional">("client");
+  const [fullName, setFullName] = useState("");
+  const [userType, setUserType] = useState<'cliente' | 'prestador'>('cliente');
+  const [isLoading, setIsLoading] = useState(false);
+  const { signUp, user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Implement signup logic
-    console.log("Signup:", { name, email, password, userType });
+    
+    if (password.length < 6) {
+      toast({
+        title: "Senha muito curta",
+        description: "A senha deve ter no mínimo 6 caracteres",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    const { error } = await signUp(email, password, fullName, userType);
+
+    if (error) {
+      toast({
+        title: "Erro ao criar conta",
+        description: error.message === "User already registered" 
+          ? "Este email já está cadastrado" 
+          : error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Conta criada com sucesso!",
+        description: "Bem-vindo ao OContato",
+      });
+    }
+
+    setIsLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 gradient-dark py-12">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="h-10 w-10 rounded-lg gradient-primary flex items-center justify-center">
-              <span className="text-white font-bold text-xl">O</span>
-            </div>
-            <span className="text-2xl font-bold">OContato</span>
-          </Link>
-          <h1 className="text-3xl font-bold mb-2">Criar conta</h1>
-          <p className="text-muted-foreground">
-            Comece a conectar com profissionais
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center px-4 gradient-dark">
+      <div className="w-full max-w-md space-y-4">
+        <Button
+          variant="ghost"
+          className="mb-4"
+          onClick={() => navigate("/")}
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Voltar para home
+        </Button>
 
-        <div className="bg-card rounded-2xl p-8 border border-border/50 shadow-card">
-          {/* User Type Selection */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <button
-              type="button"
-              onClick={() => setUserType("client")}
-              className={`p-4 rounded-lg border-2 transition-smooth text-center ${
-                userType === "client"
-                  ? "border-primary bg-primary/10"
-                  : "border-border/50 hover:border-border"
-              }`}
-            >
-              <div className="font-medium">Cliente</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Buscar serviços
+        <Card className="border-border/50 shadow-card">
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex justify-center mb-4">
+              <div className="h-12 w-12 rounded-lg gradient-primary flex items-center justify-center">
+                <span className="text-white font-bold text-2xl">O</span>
               </div>
-            </button>
-            <button
-              type="button"
-              onClick={() => setUserType("professional")}
-              className={`p-4 rounded-lg border-2 transition-smooth text-center ${
-                userType === "professional"
-                  ? "border-primary bg-primary/10"
-                  : "border-border/50 hover:border-border"
-              }`}
-            >
-              <div className="font-medium">Prestador</div>
-              <div className="text-xs text-muted-foreground mt-1">
-                Oferecer serviços
+            </div>
+            <CardTitle className="text-2xl font-bold">Criar conta no OContato</CardTitle>
+            <CardDescription>
+              Preencha os dados abaixo para começar
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="fullName">Nome completo</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Seu nome"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                />
               </div>
-            </button>
-          </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="seu@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="password">Senha</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Mínimo 6 caracteres"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
+              </div>
+              <div className="space-y-3">
+                <Label>Tipo de conta</Label>
+                <RadioGroup value={userType} onValueChange={(value) => setUserType(value as 'cliente' | 'prestador')}>
+                  <div className="flex items-center space-x-2 rounded-lg border border-border p-4 hover:bg-accent/50 transition-colors">
+                    <RadioGroupItem value="cliente" id="cliente" />
+                    <Label htmlFor="cliente" className="flex-1 cursor-pointer">
+                      <div className="font-medium">Cliente</div>
+                      <div className="text-sm text-muted-foreground">Quero contratar serviços</div>
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-2 rounded-lg border border-border p-4 hover:bg-accent/50 transition-colors">
+                    <RadioGroupItem value="prestador" id="prestador" />
+                    <Label htmlFor="prestador" className="flex-1 cursor-pointer">
+                      <div className="font-medium">Prestador de Serviços</div>
+                      <div className="text-sm text-muted-foreground">Quero oferecer meus serviços</div>
+                    </Label>
+                  </div>
+                </RadioGroup>
+              </div>
+              <Button
+                type="submit"
+                className="w-full gradient-primary hover:shadow-glow transition-smooth"
+                disabled={isLoading}
+              >
+                {isLoading ? "Criando conta..." : "Criar conta"}
+              </Button>
+            </form>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">Nome completo</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Seu nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="bg-background border-border/50"
-              />
+            <div className="mt-6 text-center text-sm">
+              <span className="text-muted-foreground">Já tem uma conta? </span>
+              <Link to="/login" className="text-primary hover:underline font-medium">
+                Faça login
+              </Link>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="bg-background border-border/50"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="bg-background border-border/50"
-              />
-            </div>
-
-            <div className="text-xs text-muted-foreground">
-              Ao criar uma conta, você concorda com nossos{" "}
-              <button type="button" className="text-primary hover:underline">
-                Termos de Uso
-              </button>{" "}
-              e{" "}
-              <button type="button" className="text-primary hover:underline">
-                Política de Privacidade
-              </button>
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full gradient-primary hover:shadow-glow transition-smooth"
-              size="lg"
-            >
-              Criar conta
-            </Button>
-          </form>
-
-          <div className="mt-6 text-center text-sm">
-            <span className="text-muted-foreground">Já tem uma conta? </span>
-            <Link to="/login" className="text-primary hover:underline font-medium">
-              Entrar
-            </Link>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
