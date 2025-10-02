@@ -14,16 +14,214 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          icon: string
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          icon: string
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      professionals: {
+        Row: {
+          address: string | null
+          business_name: string
+          category_id: string
+          city: string
+          created_at: string | null
+          description: string
+          id: string
+          is_premium: boolean | null
+          portfolio_images: string[] | null
+          profile_id: string
+          rating: number | null
+          state: string
+          total_reviews: number | null
+          updated_at: string | null
+          whatsapp: string
+        }
+        Insert: {
+          address?: string | null
+          business_name: string
+          category_id: string
+          city: string
+          created_at?: string | null
+          description: string
+          id?: string
+          is_premium?: boolean | null
+          portfolio_images?: string[] | null
+          profile_id: string
+          rating?: number | null
+          state: string
+          total_reviews?: number | null
+          updated_at?: string | null
+          whatsapp: string
+        }
+        Update: {
+          address?: string | null
+          business_name?: string
+          category_id?: string
+          city?: string
+          created_at?: string | null
+          description?: string
+          id?: string
+          is_premium?: boolean | null
+          portfolio_images?: string[] | null
+          profile_id?: string
+          rating?: number | null
+          state?: string
+          total_reviews?: number | null
+          updated_at?: string | null
+          whatsapp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "professionals_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "professionals_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          full_name: string
+          id: string
+          phone: string | null
+          updated_at: string | null
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          full_name: string
+          id: string
+          phone?: string | null
+          updated_at?: string | null
+          user_type: Database["public"]["Enums"]["user_type"]
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+          user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          client_id: string
+          comment: string | null
+          created_at: string | null
+          id: string
+          professional_id: string
+          rating: number
+        }
+        Insert: {
+          client_id: string
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          professional_id: string
+          rating: number
+        }
+        Update: {
+          client_id?: string
+          comment?: string | null
+          created_at?: string | null
+          id?: string
+          professional_id?: string
+          rating?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_professional_id_fkey"
+            columns: ["professional_id"]
+            isOneToOne: false
+            referencedRelation: "professionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      user_type: "cliente" | "prestador"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +348,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      user_type: ["cliente", "prestador"],
+    },
   },
 } as const
